@@ -13,6 +13,7 @@ def home(request):
     context = {'posts': posts, 'user': user}
     return render(request, 'home.html', context)
 
+
 @login_required
 def create_post(request):
     context ={}
