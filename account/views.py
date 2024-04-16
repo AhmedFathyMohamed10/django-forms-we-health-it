@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
-from .forms import UserRegisterForm, UserLoginForm
 from django.contrib.auth import authenticate, login
+from django.http import HttpResponse
+from .models import Profile
+from .forms import UserRegisterForm, UserLoginForm, ProfileForm
 
 def register(request):
     form = UserRegisterForm()  # Instantiating the form
@@ -32,3 +34,16 @@ def login_user(request):
 
     return render(request, 'login.html', {'form': form})
 
+
+def profile(request):
+    form = ProfileForm()
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+        else:
+            return HttpResponse('Invalid form')
+    else:
+        form = ProfileForm()
+    return render(request, 'profile.html', {'form': form})
