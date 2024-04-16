@@ -4,24 +4,131 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - Posts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .post {
+            background-color: #fff;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .post h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .post h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .post p {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .user-info {
+            margin-bottom: 20px;
+        }
+
+        .user-info p {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .create-post-button {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .create-post-button:hover {
+            background-color: #0056b3;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .pagination a {
+            display: inline-block;
+            margin: 0 5px;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 3px;
+            text-decoration: none;
+        }
+
+        .pagination a:hover {
+            background-color: #0056b3;
+        }
+
+        .pagination .current {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    {% if user.is_authenticated %}
-        {{ user.username }}
-    {% else %}
-        <p>You are not logged in</p>
-    {% endif %}
-    <!-- Render the posts -->
-    {% for post in posts %}
-        <h1>
-            {{post.title}}
-        </h1>
-        <h2>
-            {{post.body}}
-        </h2>
-        <p>
-            {{post.created_at}}
-        </p>
-    {% endfor %}
+    <div class="container">
+        <div class="user-info">
+            {% if user.is_authenticated %}
+                <p>Welcome, <b>{{ user.username }}</b></p>
+            {% else %}
+                <p>You are not logged in</p>
+            {% endif %}
+        </div>
+
+        <!-- Render the posts -->
+        {% for post in page_obj %}
+            <div class="post">
+                <h1>{{ post.title }}</h1>
+                <h2>{{ post.body }}</h2>
+                <p>Created at: {{ post.created_at }}</p>
+            </div>
+        {% endfor %}
+
+        <!-- Pagination links -->
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+
+        <a href="{% url 'create-post' %}" class="create-post-button">Create a post now</a>
+    </div>
 </body>
 </html>

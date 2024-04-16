@@ -1,8 +1,11 @@
+from django.forms import formset_factory
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from .forms import ContactUsForm, PostForm
 from .models import Post
 from django.contrib.auth.decorators import login_required
+
+from django.core.paginator import Paginator
 
 
 # Create your views here.
@@ -10,18 +13,37 @@ from django.contrib.auth.decorators import login_required
 def home(request):
     posts = Post.objects.all()
     user = request.user
-    context = {'posts': posts, 'user': user}
+    
+    paginator = Paginator(posts, 5)  # Paginate by 5 posts per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {'page_obj': page_obj, 'user': user}
     return render(request, 'home.html', context)
+
+@login_required
+def display_posts(request):
+    PostFormSet = formset_factory(PostForm, extra=0)
+    posts = Post.objects.all()
+    if request.method == 'POST':
+        formset = PostFormSet(request.POST)
+        if formset.is_valid():
+            for form in formset:
+                form.save()
+            return redirect('home')
+    else:
+        formset = PostFormSet(initial=[{'title': post.title, 'body': post.body} for post in posts])
+    return render(request, 'display_posts.html', {'formset': formset})
 
 
 @login_required
 def create_post(request):
     context ={}
     if request.method == 'POST':
-        form = PostForm(request.POST or None, request.FILES or None)
+        form = PostForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponse('Data Submitted Successfully.')
+            return redirect('home')
         else:
             return HttpResponse("Data Didn't Submit Successfully.")
     else:
