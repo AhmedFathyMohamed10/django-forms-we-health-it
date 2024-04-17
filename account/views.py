@@ -53,5 +53,7 @@ def profile(request):
         else:
             return HttpResponse('Invalid form')
     else:
-        form = ProfileForm()
+        form = ProfileForm(
+            instance=request.user.profile
+        )
     return render(request, 'profile.html', {'form': form})
