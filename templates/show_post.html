@@ -40,6 +40,19 @@
         a:hover {
             text-decoration: underline;
         }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+        }
+
+        li:last-child {
+            border-bottom: none;
+        }
     </style>
 </head>
 <body>
@@ -48,6 +61,27 @@
         <h1>Post title: {{ post.title }}</h1>
         <p>Post content: {{ post.body }}</p>
         <p>Post date: {{ post.created_at }}</p>
+
+        <!-- Create a comment form -->
+        <h2>Leave a comment</h2>
+        <!-- Comment form -->
+        <form action="{% url 'add-comment' post.id %}" method="POST">
+            {% csrf_token %}
+            <p for="comment">Comment:</p>
+            <input type="text" name="comment" id="comment" value="{{form.as_p}}" required>
+
+            <!-- Submit button -->
+            <input type="submit" value="Comment">
+        </form>
+
+        <!-- Show the comments -->
+        <h2>Comments | {{ post.comments.count }}</h2>
+        <ul>
+            {% for comment in post.comments.all %}
+                <li>{{ comment.comment }} - {{ comment.created_at }}</li>
+            {% endfor %}
+        </ul>
+
 
         <a href="{% url 'home' %}">Back to home</a>
     </div>

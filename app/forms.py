@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post
+from .models import Post, Comment
 
 class ContactUsForm(forms.Form):
     name = forms.CharField(label='Your name here', max_length=100)
@@ -15,3 +15,9 @@ class PostForm(forms.ModelForm):
             'title': 'Title',
             'body': 'Body',
         }
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('comment',)
+        labels = {'comment': 'Comment'}

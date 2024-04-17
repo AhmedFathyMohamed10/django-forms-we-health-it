@@ -9,4 +9,6 @@ urlpatterns = [
     path('create-post/', views.create_post, name='create-post'),
     path('display-posts/', views.display_posts, name='display-posts'),
     path('post/<int:pk>/', views.show_post, name='post-detail'),
+    path('add-comment/<int:pk>/', views.add_comment, name='add-comment'),
+    path('comments/<int:pk>/', views.show_comments, name='show-comments')
 ]

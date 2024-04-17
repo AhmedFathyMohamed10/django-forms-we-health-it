@@ -1,7 +1,7 @@
 from django.forms import formset_factory
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from .forms import ContactUsForm, PostForm
+from .forms import ContactUsForm, PostForm, CommentForm
 from .models import Post
 from django.contrib.auth.decorators import login_required
 
@@ -58,3 +58,22 @@ def create_post(request):
 
 def custom_404(request, exception):
     return render(request, exception, '404.html', status=404)
+
+
+def add_comment(request, pk):
+    post = Post.objects.get(id=pk)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.save()
+            return redirect('post-detail', pk=post.id)
+    else:
+        form = CommentForm()
+    return render(request, 'show_post.html', {'form': form})
+
+def show_comments(request, pk):
+    post = Post.objects.get(id=pk)
+    comments = post.comments.all()
+    return render(request, 'show_post.html', {'comments': comments})
