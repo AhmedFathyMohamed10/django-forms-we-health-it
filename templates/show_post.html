@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post</title>
+</head>
+<body>
+    <!-- Post page -->
+    <h1>Post title: {{ post.title }}</h1>
+    <p>Post content: {{ post.body }}</p>
+    <p>Post date: {{ post.created_at }}</p>
+
+    <a href="{% url 'home' %}">Back to home</a>
+</body>
+</html>

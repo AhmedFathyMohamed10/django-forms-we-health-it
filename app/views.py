@@ -9,7 +9,7 @@ from django.core.paginator import Paginator
 
 
 # Create your views here.
-def home(request):
+def posts(request):
     posts = Post.objects.all()
     user = request.user
     
@@ -33,6 +33,11 @@ def display_posts(request):
     else:
         formset = PostFormSet(initial=[{'title': post.title, 'body': post.body} for post in posts])
     return render(request, 'display_posts.html', {'formset': formset})
+
+@login_required
+def show_post(request, pk):
+    post = Post.objects.get(id=pk)
+    return render(request, 'show_post.html', {'post': post})
 
 
 @login_required

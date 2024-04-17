@@ -108,9 +108,11 @@
                 <h1>{{ post.title }}</h1>
                 <h2>{{ post.body }}</h2>
                 <p>Created at: {{ post.created_at }}</p>
+                <b><a href="{% url 'post-detail' %}">Show Post</a></b>
             </div>
         {% endfor %}
-
+        <!-- Show post -->
+        
         <!-- Pagination links -->
         <div class="pagination">
             <span class="step-links">
