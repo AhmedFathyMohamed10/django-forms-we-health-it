@@ -20,6 +20,12 @@ def posts(request):
     context = {'page_obj': page_obj, 'user': user}
     return render(request, 'home.html', context)
 
+
+def show_post(request, pk):
+    post = Post.objects.get(id=pk)
+    return render(request, 'show_post.html', {'post': post})
+
+
 @login_required
 def display_posts(request):
     PostFormSet = formset_factory(PostForm, extra=0)
@@ -33,12 +39,6 @@ def display_posts(request):
     else:
         formset = PostFormSet(initial=[{'title': post.title, 'body': post.body} for post in posts])
     return render(request, 'display_posts.html', {'formset': formset})
-
-@login_required
-def show_post(request, pk):
-    post = Post.objects.get(id=pk)
-    return render(request, 'show_post.html', {'post': post})
-
 
 @login_required
 def create_post(request):
