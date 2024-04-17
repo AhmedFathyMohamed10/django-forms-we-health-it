@@ -9,7 +9,6 @@ from django.core.paginator import Paginator
 
 
 # Create your views here.
-@login_required
 def home(request):
     posts = Post.objects.all()
     user = request.user
@@ -52,5 +51,8 @@ def create_post(request):
     return render(request, "create-post.html", context)
 
 
+# views.py
+from django.shortcuts import render
 
- 
+def custom_404(request, exception):
+    return render(request, exception, '404.html', status=404)

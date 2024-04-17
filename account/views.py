@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
-from .models import Profile
 from .forms import UserRegisterForm, UserLoginForm, ProfileForm
+from .models import Profile
+
+# Create your views here.
 
 def register(request):
     form = UserRegisterForm()  # Instantiating the form
@@ -10,8 +12,10 @@ def register(request):
         form = UserRegisterForm(request.POST)  # <-- Problematic line
         if form.is_valid():
             user = form.save()
+            profile = Profile.objects.create(user=user)
+            profile.save()
             login(request, user)
-            return redirect('home')
+            return redirect('profile')
     else:
         form = UserRegisterForm()  # This line is redundant
 
@@ -34,6 +38,10 @@ def login_user(request):
 
     return render(request, 'login.html', {'form': form})
 
+def logout_user(request):
+    logout(request)
+    return redirect('home')
+
 
 def profile(request):
     form = ProfileForm()
@@ -41,7 +49,7 @@ def profile(request):
         form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
         if form.is_valid():
             form.save()
-            return redirect('profile')
+            return redirect('home')
         else:
             return HttpResponse('Invalid form')
     else:

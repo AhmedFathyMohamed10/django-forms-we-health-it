@@ -95,8 +95,10 @@
         <div class="user-info">
             {% if user.is_authenticated %}
                 <p>Welcome, <b>{{ user.username }}</b></p>
+                <b><a href="{% url 'logout' %}">Logout</a></b>
             {% else %}
-                <p>You are not logged in</p>
+                <b><a href="{% url 'login' %}">Login</a></b>
+                <b><a href="{% url 'register' %}">Register</a></b>
             {% endif %}
         </div>
 
