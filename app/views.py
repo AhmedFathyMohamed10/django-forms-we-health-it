@@ -8,7 +8,6 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
 
-# Create your views here.
 def posts(request):
     posts = Post.objects.all()
     user = request.user
