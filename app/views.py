@@ -1,6 +1,6 @@
 from django.forms import formset_factory
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from .forms import ContactUsForm, PostForm, CommentForm
 from .models import Post
 from django.contrib.auth.decorators import login_required
@@ -21,7 +21,12 @@ def posts(request):
 
 
 def show_post(request, pk):
-    post = Post.objects.get(id=pk)
+    
+    try:
+        post = Post.objects.get(id=pk)
+    except Post.DoesNotExist:
+        return render(request, 'post-not-found.html', status=404)
+    
     return render(request, 'show_post.html', {'post': post})
 
 
